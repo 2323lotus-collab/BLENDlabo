@@ -1,0 +1,1006 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>BLEND LAB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: cupping-sheet style single column, phone first. Header steps, bottom action bar. */
+:root {
+  --bg: #f2e9da;
+  --surface: #fbf6ec;
+  --surface2: #ece1cd;
+  --ink: #2a1c12;
+  --ink2: #6b5847;
+  --line: #d9ccb5;
+  --accent: #6f3f22;
+  --accent-ink: #fbf4e8;
+  --accent-soft: #e6d2b6;
+  --ok: #2f6b3f;
+  --warn: #a4561d;
+  --bad: #a8362b;
+  --s1: #7a4425;
+  --s2: #2f7d6d;
+  --s3: #c08a1d;
+  --s4: #7b4f9e;
+  --s5: #c0473a;
+  --f-display: 'Shippori Mincho B1', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --f-body: 'Zen Kaku Gothic New', 'Hiragino Sans', 'Yu Gothic', system-ui, sans-serif;
+  --f-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17100c; --surface: #221812; --surface2: #2d2119; --ink: #f1e5d2; --ink2: #b7a48f; --line: #3d2d22;
+    --accent: #d9a66e; --accent-ink: #1c120b; --accent-soft: #3a2819; --ok: #7cc08d; --warn: #e0a064; --bad: #e8887c;
+    --s1: #d9a066; --s2: #55b9a5; --s3: #e5b94a; --s4: #b58bd6; --s5: #ec7d70;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17100c; --surface: #221812; --surface2: #2d2119; --ink: #f1e5d2; --ink2: #b7a48f; --line: #3d2d22;
+  --accent: #d9a66e; --accent-ink: #1c120b; --accent-soft: #3a2819; --ok: #7cc08d; --warn: #e0a064; --bad: #e8887c;
+  --s1: #d9a066; --s2: #55b9a5; --s3: #e5b94a; --s4: #b58bd6; --s5: #ec7d70;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.7;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+h1, h2, h3, p, ul, ol { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+input, textarea, select { font: inherit; color: inherit; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+.wrap { max-width: 680px; margin: 0 auto; }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.small { font-size: .8125rem; color: var(--ink2); }
+
+/* header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg); border-bottom: 1px solid var(--line);
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); background: var(--bg); z-index: 30; }
+.top-in { max-width: 680px; margin: 0 auto; display: flex; align-items: center; gap: 12px; min-height: 52px; }
+.logo { border: 0; background: none; padding: 8px 0; font-family: var(--f-display); font-weight: 800; letter-spacing: .14em; font-size: 1.0625rem; white-space: nowrap; }
+.logo span { color: var(--accent); }
+.steps { display: flex; gap: 2px; margin-left: auto; min-width: 0; }
+.steps button { border: 0; background: none; padding: 6px 8px; min-height: 44px; font-size: .8125rem; color: var(--ink2); border-bottom: 3px solid transparent; white-space: nowrap; }
+.steps button[aria-current="step"] { color: var(--ink); font-weight: 700; border-bottom-color: var(--accent); }
+.steps button:disabled { opacity: .4; cursor: default; }
+
+main { max-width: 680px; margin: 0 auto; padding-block: 20px 120px; }
+.screen-t { font-family: var(--f-display); font-weight: 800; font-size: 1.5rem; line-height: 1.35; text-wrap: balance; }
+.screen-d { color: var(--ink2); font-size: .9375rem; margin-top: 4px; }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 10px;
+  border: 1.5px solid var(--accent); background: transparent; color: var(--accent); font-weight: 700; text-decoration: none; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); }
+.btn.quiet { border-color: var(--line); color: var(--ink); font-weight: 500; }
+.btn.small { min-height: 40px; padding: 0 14px; font-size: .875rem; }
+.btn.danger { border-color: var(--bad); color: var(--bad); }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: .4; cursor: not-allowed; }
+.btn.block { width: 100%; }
+
+/* home */
+.hero { padding-top: 8px; }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .12em; color: var(--ink2); text-transform: none; }
+.hero h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(2.6rem, 13vw, 4.2rem); line-height: 1; letter-spacing: .06em; margin-top: 10px; }
+.hero h1 span { color: var(--accent); display: block; }
+.lead { margin-top: 18px; max-width: 34em; }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.sheet { margin-top: 32px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.sheet-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.tag { display: inline-block; font-size: .6875rem; font-family: var(--f-mono); letter-spacing: .06em; padding: 1px 8px; border: 1px solid var(--line); border-radius: 99px; color: var(--ink2); background: var(--bg); }
+.how { margin-top: 32px; display: grid; gap: 12px; counter-reset: s; }
+.how li { counter-increment: s; display: grid; grid-template-columns: 2.2rem 1fr; gap: 6px; padding-top: 12px; border-top: 1px solid var(--line); }
+.how li::before { content: counter(s); font-family: var(--f-mono); color: var(--accent); font-weight: 500; }
+.how b { display: block; }
+.disc { margin-top: 28px; padding: 12px 14px; border-left: 3px solid var(--warn); background: var(--surface); font-size: .875rem; color: var(--ink2); border-radius: 0 8px 8px 0; }
+
+/* select */
+.tools { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.search { flex: 1 1 180px; min-height: 46px; padding: 0 14px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--surface); }
+.region { margin-top: 26px; }
+.region h2 { font-family: var(--f-display); font-size: 1.125rem; font-weight: 800; display: flex; align-items: baseline; gap: 10px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+.region h2 small { font-family: var(--f-mono); font-weight: 400; color: var(--ink2); font-size: .75rem; }
+.beans { display: grid; gap: 10px; margin-top: 12px; grid-template-columns: 1fr; }
+@media (min-width: 620px) { .beans { grid-template-columns: 1fr 1fr; } }
+.bean { display: grid; grid-template-rows: 1fr auto; background: var(--surface); border: 1.5px solid var(--line); border-radius: 12px; overflow: hidden; }
+.bean.on { border-color: var(--accent); background: var(--accent-soft); }
+.bean.full:not(.on) { opacity: .55; }
+.bean-main { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: start; text-align: left; border: 0; background: none; padding: 12px 12px 6px; min-height: 64px; }
+.check { width: 22px; height: 22px; border: 2px solid var(--ink2); border-radius: 6px; margin-top: 3px; display: grid; place-items: center; }
+.bean.on .check { background: var(--accent); border-color: var(--accent); }
+.bean.on .check::after { content: ""; width: 5px; height: 10px; border: solid var(--accent-ink); border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px, -1px); }
+.bean-t b { font-size: 1.0625rem; display: block; line-height: 1.35; }
+.bean-t small { color: var(--ink2); font-size: .75rem; display: block; }
+.bean-t p { font-size: .8125rem; color: var(--ink2); margin-top: 4px; line-height: 1.5; }
+.glyph { display: flex; gap: 3px; align-items: flex-end; height: 44px; padding-top: 2px; }
+.glyph i { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; height: 100%; font-style: normal; font-size: .5625rem; color: var(--ink2); width: 14px; }
+.glyph i s { display: block; width: 8px; background: var(--accent); border-radius: 2px 2px 0 0; min-height: 2px; }
+.bean-i { border: 0; border-top: 1px solid var(--line); background: transparent; min-height: 40px; font-size: .8125rem; color: var(--accent); font-weight: 700; text-align: left; padding: 0 14px 0 48px; }
+
+/* bottom bar */
+.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; background: var(--surface); border-top: 1px solid var(--line);
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.bar-in { max-width: 680px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+.bar-in .info { flex: 1; min-width: 0; font-size: .8125rem; color: var(--ink2); line-height: 1.4; }
+.bar-in .info b { color: var(--ink); font-size: .9375rem; }
+.bar-in .btn { flex: 0 0 auto; }
+.bar-in .btn.grow { flex: 1; }
+.bar .msg { font-size: .8125rem; color: var(--warn); }
+
+/* mix */
+.meters { position: sticky; top: calc(52px + env(safe-area-inset-top, 0px)); z-index: 15; background: var(--bg); padding: 10px 0 8px; border-bottom: 1px solid var(--line); margin-top: 10px; }
+.meters-in { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; align-items: end; }
+.mt { text-align: center; }
+.mt .v { font-family: var(--f-mono); font-weight: 500; font-size: 1rem; }
+.mt .col { height: 44px; background: var(--surface2); border-radius: 4px; position: relative; overflow: hidden; margin: 2px auto; max-width: 44px; }
+.mt .col i { position: absolute; left: 0; right: 0; bottom: 0; background: var(--accent); }
+.mt .n { font-size: .6875rem; color: var(--ink2); }
+.sumrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 14px; }
+.sum { font-family: var(--f-mono); font-size: 1.125rem; margin-right: auto; }
+.sum.ok { color: var(--ok); } .sum.ng { color: var(--bad); }
+.tgl { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; font-size: .8125rem; color: var(--ink2); cursor: pointer; }
+.tgl input { width: 20px; height: 20px; accent-color: var(--accent); }
+.rows { display: grid; gap: 12px; margin-top: 12px; }
+.row { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 8px; }
+.row-h { display: flex; align-items: center; gap: 10px; }
+.sw { width: 14px; height: 14px; border-radius: 4px; flex: 0 0 auto; }
+.row-h b { font-size: 1.0625rem; }
+.row-h small { color: var(--ink2); font-size: .75rem; }
+.drop { margin-left: auto; border: 1px solid var(--line); background: none; border-radius: 8px; min-height: 36px; padding: 0 10px; font-size: .75rem; color: var(--ink2); }
+.drop.hot { border-color: var(--warn); color: var(--warn); font-weight: 700; }
+.row-b { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; margin-top: 6px; }
+.numbox { display: inline-flex; align-items: center; gap: 4px; }
+.numbox input { width: 4.2rem; min-height: 44px; text-align: right; padding: 0 8px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--bg); font-family: var(--f-mono); font-size: 1.0625rem; }
+input[type=range] { width: 100%; height: 44px; accent-color: var(--accent); background: transparent; margin: 0; }
+
+/* result */
+.stack { display: flex; height: 22px; border-radius: 6px; overflow: hidden; margin-top: 12px; background: var(--surface2); }
+.stack i { display: block; min-width: 2px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; font-size: .8125rem; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 16px; }
+.panel h2 { font-family: var(--f-display); font-weight: 800; font-size: 1.125rem; margin-bottom: 10px; }
+.radar { width: 100%; max-width: 420px; margin: 0 auto; display: block; height: auto; }
+.radar .ring { fill: none; stroke: var(--line); stroke-width: 1; }
+.radar .axis { stroke: var(--line); stroke-width: 1; }
+.radar text { fill: var(--ink2); font-size: 12px; font-family: var(--f-body); }
+.radar .pt { stroke: var(--surface); stroke-width: 1.5; }
+.brow { display: grid; grid-template-columns: 3.2rem 1fr 2.6rem; gap: 10px; align-items: center; min-height: 34px; }
+.brow .l { font-size: .875rem; }
+.brow .v { font-family: var(--f-mono); text-align: right; font-weight: 500; }
+.track { height: 12px; background: var(--surface2); border-radius: 6px; position: relative; }
+.track i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 6px; }
+.track u { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); opacity: .7; }
+.keyline { display: flex; gap: 16px; flex-wrap: wrap; font-size: .75rem; color: var(--ink2); margin-top: 8px; }
+.keyline span { display: inline-flex; align-items: center; gap: 6px; }
+.keyline .k1 { width: 16px; height: 3px; background: var(--accent); border-radius: 2px; }
+.keyline .k2 { width: 2px; height: 12px; background: var(--ink); opacity: .7; }
+.desc p + p { margin-top: 8px; }
+.notes li { display: grid; grid-template-columns: 1fr; gap: 4px; padding: 10px 0; border-top: 1px solid var(--line); }
+.notes li:first-child { border-top: 0; padding-top: 0; }
+.eff { display: flex; flex-wrap: wrap; gap: 6px; }
+.eff span { font-family: var(--f-mono); font-size: .75rem; padding: 0 8px; border-radius: 99px; background: var(--surface2); }
+.eff .p { color: var(--ok); } .eff .m { color: var(--bad); }
+.dtable { width: 100%; border-collapse: collapse; font-size: .875rem; }
+.dtable th, .dtable td { padding: 6px 4px; text-align: right; border-bottom: 1px solid var(--line); font-family: var(--f-mono); font-weight: 400; }
+.dtable th:first-child, .dtable td:first-child { text-align: left; font-family: var(--f-body); }
+.dtable thead th { font-family: var(--f-body); font-size: .75rem; color: var(--ink2); }
+.field { display: grid; gap: 6px; margin-top: 12px; }
+.field label { font-size: .8125rem; color: var(--ink2); }
+.field input[type=text], .field input[type=number], .field select, .field textarea { min-height: 46px; padding: 8px 12px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--bg); width: 100%; }
+.field textarea { min-height: 84px; line-height: 1.6; resize: vertical; }
+
+/* saved */
+.rec { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-top: 12px; }
+.rec-h { display: flex; gap: 10px; align-items: flex-start; }
+.rec-h .cb { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin: -8px 0 0 -10px; flex: 0 0 auto; cursor: pointer; }
+.rec-h .cb input { width: 22px; height: 22px; accent-color: var(--accent); }
+.rec-h h3 { font-family: var(--f-display); font-weight: 800; font-size: 1.125rem; line-height: 1.4; }
+.rec-vals { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 10px; text-align: center; }
+.rec-vals div { background: var(--bg); border-radius: 8px; padding: 4px 0; }
+.rec-vals b { display: block; font-family: var(--f-mono); font-weight: 500; }
+.rec-vals small { font-size: .6875rem; color: var(--ink2); }
+.rec-a { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.empty { text-align: center; padding: 36px 8px; color: var(--ink2); }
+.empty .btn { margin-top: 14px; }
+.tast { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+.tast h4 { margin: 0 0 6px; font-size: .875rem; }
+.trow { display: grid; grid-template-columns: 3rem 1fr 2.4rem; gap: 8px; align-items: center; }
+.trow output { font-family: var(--f-mono); text-align: right; }
+.tlist li { font-size: .8125rem; padding: 6px 0; border-top: 1px solid var(--line); }
+.cmp-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: center; margin-top: 4px; font-size: .875rem; }
+.cmp-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.cmp-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.scroll-x { overflow-x: auto; }
+.best { font-weight: 700; color: var(--accent); }
+textarea.export { width: 100%; min-height: 120px; margin-top: 10px; font-family: var(--f-mono); font-size: .75rem; padding: 10px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--bg); }
+
+/* modal */
+.scrim { position: fixed; inset: 0; z-index: 40; background: rgba(20, 12, 7, .55); display: flex; align-items: flex-end; justify-content: center; }
+.scrim[hidden] { display: none; }
+.sheetm { background: var(--bg); width: 100%; max-width: 640px; max-height: 92%; overflow: auto; border-radius: 16px 16px 0 0; padding: 18px max(16px, env(safe-area-inset-left, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)); border: 1px solid var(--line); }
+@media (min-width: 700px) { .scrim { align-items: center; } .sheetm { border-radius: 16px; max-height: 88%; } }
+.sheetm h2 { font-family: var(--f-display); font-weight: 800; font-size: 1.375rem; line-height: 1.35; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 12px; }
+.mact { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.edt { font-size: .6875rem; color: var(--warn); }
+.toast { position: fixed; left: 50%; bottom: calc(86px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: .875rem; z-index: 60; max-width: 90%; text-align: center; }
+.toast[hidden] { display: none; }
+@media (prefers-reduced-motion: no-preference) { .bean, .btn { transition: background-color .15s, border-color .15s; } }
+</style>
+
+<header class="top"><div class="top-in">
+  <button class="logo" data-act="home" aria-label="ホームへ">BLEND <span>LAB</span></button>
+  <nav class="steps" id="steps" aria-label="作成の流れ"></nav>
+</div></header>
+<main id="view"></main>
+<div class="bar" id="bar" hidden></div>
+<div class="scrim" id="modal" hidden></div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function () {
+'use strict';
+
+/* ============================================================
+   データ層: 豆データ(BASE_BEANS)と味の計算モデル(MODEL)は
+   画面のコードから独立しています。ここを書き換えるだけで調整できます。
+   数値はすべて仮の推定値で、実測値ではありません。
+   ============================================================ */
+var AX = [['acid', '酸味'], ['bitter', '苦味'], ['sweet', '甘味'], ['body', 'コク'], ['aroma', '香り']];
+var AXK = AX.map(function (a) { return a[0]; });
+var AXN = {}; AX.forEach(function (a) { AXN[a[0]] = a[1]; });
+var AXS = { acid: '酸', bitter: '苦', sweet: '甘', body: 'コ', aroma: '香' };
+var REGIONS = ['中南米', 'アフリカ', 'アジア・太平洋', '高級・希少'];
+var KINDS = ['国名', '地域名', '銘柄名', '品種名', '等級名'];
+var BASIS = '一般的な風味評価の傾向をもとにした仮の推定値です。実測値ではありません。';
+
+function B(id, name, region, kind, origin, grade, roast, t, desc, basis) {
+  return { id: id, name: name, region: region, kind: kind, origin: origin, grade: grade, roast: roast,
+    taste: { acid: t[0], bitter: t[1], sweet: t[2], body: t[3], aroma: t[4] }, desc: desc, basis: basis || BASIS };
+}
+var BASE_BEANS = [
+  B('brazil', 'ブラジル', '中南米', '国名', 'ブラジル', 'NY No.2 など', '中煎り〜深煎り', [35, 55, 60, 60, 45], 'ナッツやチョコレートを思わせる穏やかな風味です。酸味が控えめで、ブレンドの土台になりやすい豆です。', 'ナチュラル精製が主流で酸味が低めとされる一般的な傾向を参考にした仮の推定値です。'),
+  B('colombia', 'コロンビア', '中南米', '国名', 'コロンビア', 'スプレモ など', '中煎り', [55, 45, 62, 62, 60], '酸味と甘味の均整がよく、バランス型の代表格です。ブレンドで使い回しやすい豆です。', '高地産が多く、酸と甘味の釣り合いが語られる傾向を参考にした仮の推定値です。'),
+  B('guatemala', 'グアテマラ', '中南米', '国名', 'グアテマラ', 'SHB など', '中煎り〜中深煎り', [62, 48, 58, 66, 65], '火山性土壌の産地で、華やかな酸味とほのかなスモーキーさを併せ持ちます。', '高標高産地の特徴として語られる傾向を参考にした仮の推定値です。'),
+  B('costarica', 'コスタリカ', '中南米', '国名', 'コスタリカ', 'SHB など', '浅煎り〜中煎り', [66, 40, 62, 55, 62], 'クリーンで明るい酸味と、きれいな甘味が特徴です。', '精製の丁寧さによるクリーンな味わいとして語られる傾向を参考にした仮の推定値です。'),
+  B('mexico', 'メキシコ', '中南米', '国名', 'メキシコ', '', '中煎り', [45, 45, 50, 45, 45], '軽くやわらかな口当たりで、クセが少なく他の豆と合わせやすい豆です。', 'クセの少ない軽め〜中庸の豆として語られる傾向を参考にした仮の推定値です。'),
+  B('peru', 'ペルー', '中南米', '国名', 'ペルー', '', '中煎り', [48, 42, 55, 48, 50], 'やさしい甘味と穏やかな酸味を持つ、軽めのボディの豆です。', '穏やかで軽めと語られる傾向を参考にした仮の推定値です。'),
+  B('elsalvador', 'エルサルバドル', '中南米', '国名', 'エルサルバドル', '', '中煎り', [55, 40, 65, 55, 58], '甘味が強く、柑橘やキャラメルを思わせる風味があります。', '甘味が強いと語られる傾向を参考にした仮の推定値です。'),
+  B('honduras', 'ホンジュラス', '中南米', '国名', 'ホンジュラス', '', '中煎り', [50, 45, 58, 52, 52], '標高や産地で幅がありますが、中庸でまとまりのよい味わいです。', '中庸なバランス型として語られる傾向を参考にした仮の推定値です。'),
+  B('nicaragua', 'ニカラグア', '中南米', '国名', 'ニカラグア', '', '中煎り', [52, 43, 60, 55, 55], 'やわらかな酸味と素直な甘味を持つ、飲みやすい豆です。', 'やわらかい酸味と素直な甘味と語られる傾向を参考にした仮の推定値です。'),
+
+  B('ethiopia', 'エチオピア', 'アフリカ', '国名', 'エチオピア', 'G1 など', '浅煎り', [75, 25, 60, 35, 90], '花やベリーを思わせる華やかな香りと明るい酸味が特徴です。軽やかなボディです。', '花のような香りと明るい酸味で知られる一般的な傾向を参考にした仮の推定値です。'),
+  B('mocha', 'モカ', 'アフリカ', '銘柄名', 'イエメン・エチオピア', '', '浅煎り〜中煎り', [68, 35, 65, 55, 85], '積み出し港の名に由来する銘柄です。ワインのような酸味と独特の香りがあります。', 'モカらしいフルーティーさとして語られる傾向を参考にした仮の推定値です。'),
+  B('kenya', 'ケニア', 'アフリカ', '国名', 'ケニア', 'AA など', '浅煎り〜中煎り', [88, 35, 62, 68, 80], 'ブラックカラントのような鮮烈な酸味と、しっかりしたボディを併せ持ちます。', '強い酸味と厚みで知られる一般的な傾向を参考にした仮の推定値です。'),
+  B('kilimanjaro', 'キリマンジャロ', 'アフリカ', '銘柄名', 'タンザニア', 'AA など', '中煎り', [70, 40, 50, 50, 60], 'キリマンジャロ山麓産の銘柄で、力強い酸味と軽快な香りが特徴です。', '力強い酸味として語られる傾向を参考にした仮の推定値です。'),
+  B('rwanda', 'ルワンダ', 'アフリカ', '国名', 'ルワンダ', '', '浅煎り〜中煎り', [68, 35, 65, 50, 72], '赤い果実のような酸味と、紅茶を思わせる軽やかな甘さがあります。', '明るい酸味と甘味として語られる傾向を参考にした仮の推定値です。'),
+  B('burundi', 'ブルンジ', 'アフリカ', '国名', 'ブルンジ', '', '浅煎り〜中煎り', [65, 38, 60, 50, 70], 'ルワンダに近い赤い果実感があり、やや素朴な甘味が残ります。', '近隣産地に近い傾向と語られることを参考にした仮の推定値です。'),
+
+  B('mandheling', 'マンデリン', 'アジア・太平洋', '銘柄名', 'インドネシア・スマトラ島', 'G1 など', '中深煎り〜深煎り', [28, 72, 52, 85, 65], '民族名に由来する銘柄です。ハーブのような香りと重厚なコクがあり、酸味は低めです。', 'スマトラ式精製による重厚さとして語られる傾向を参考にした仮の推定値です。'),
+  B('bali', 'バリ', 'アジア・太平洋', '地域名', 'インドネシア・バリ島', '', '中煎り', [40, 50, 58, 62, 55], '穏やかな酸味とやわらかな甘味を持つ、クリーンな後味の豆です。', 'クリーンで穏やかと語られる傾向を参考にした仮の推定値です。'),
+  B('india', 'インド', 'アジア・太平洋', '国名', 'インド', '', '中深煎り', [25, 62, 45, 70, 40], 'スパイシーで厚みがあり、酸味はごく穏やかです。', '低酸でスパイシーと語られる傾向を参考にした仮の推定値です。'),
+  B('vietnam', 'ベトナム', 'アジア・太平洋', '国名', 'ベトナム', '', '深煎り', [15, 80, 35, 70, 30], 'ロブスタ種が中心で、強い苦味と重い口当たりがあります。酸味はほとんどありません。', 'ロブスタ種の割合が高いことによる強い苦味の傾向を参考にした仮の推定値です。'),
+  B('png', 'パプアニューギニア', 'アジア・太平洋', '国名', 'パプアニューギニア', '', '中煎り', [50, 50, 55, 58, 58], 'ほどよい酸味とコクを持ち、フルーティーさとスパイス感が混ざります。', '中庸でフルーティーと語られる傾向を参考にした仮の推定値です。'),
+  B('toraja', 'トラジャ', 'アジア・太平洋', '銘柄名', 'インドネシア・スラウェシ島', '', '中深煎り', [38, 60, 62, 80, 68], '深いコクと果実を思わせる甘味、ほのかなスパイス感が特徴です。', '深いコクと甘味として語られる傾向を参考にした仮の推定値です。'),
+
+  B('geisha', 'ゲイシャ', '高級・希少', '品種名', 'パナマ・エチオピアなど', '', '浅煎り', [70, 20, 85, 45, 98], 'ジャスミンやベルガモットを思わせる香りで知られる品種です。産地や精製で印象が大きく変わります。', '香りの高さで知られる一般的な傾向を参考にした仮の推定値です。'),
+  B('bluemountain', 'ブルーマウンテン', '高級・希少', '銘柄名', 'ジャマイカ', 'No.1 など', '浅煎り〜中煎り', [52, 28, 75, 60, 75], 'ジャマイカのブルーマウンテン山脈産です。雑味が少なく、均整のとれたクリーンな味わいで知られます。', 'クリーンでバランスがよいと語られる傾向を参考にした仮の推定値です。'),
+  B('kona', 'ハワイコナ', '高級・希少', '銘柄名', 'ハワイ島コナ地区', 'エクストラファンシー など', '中煎り', [55, 32, 70, 58, 70], '明るさとやわらかな甘味を併せ持つ、なめらかな口当たりの銘柄です。', 'なめらかで甘味があると語られる傾向を参考にした仮の推定値です。'),
+  B('jhm', 'ジャマイカ・ハイマウンテン', '高級・希少', '銘柄名', 'ジャマイカ', '', '中煎り', [48, 35, 68, 55, 65], 'ブルーマウンテンより低い標高帯の銘柄で、まろやかで穏やかな味わいです。', '穏やかでまろやかと語られる傾向を参考にした仮の推定値です。'),
+  B('pacamara', 'パカマラ', '高級・希少', '品種名', '中米各地', '', '浅煎り〜中煎り', [60, 35, 78, 70, 82], 'パカス種とマラゴジッペ種の交配種です。豊かな香りと厚みのある甘味が特徴です。', '香りと甘味が豊かと語られる傾向を参考にした仮の推定値です。'),
+  B('maragogype', 'マラゴジッペ', '高級・希少', '品種名', '中米各地', '', '中煎り', [50, 38, 62, 82, 60], '大粒で「象の豆」とも呼ばれる品種です。やわらかな酸味と厚みのあるボディを持ちます。', '厚みのあるボディと語られる傾向を参考にした仮の推定値です。')
+];
+
+/* 相性補正モデル(仮)。数値を変えると予測が変わります。
+   scale: 全体の強さ / maxAdj: 1つの味に加わる補正の上限 */
+var MODEL = {
+  version: 'v0.1 (仮モデル)',
+  scale: 1,
+  maxAdj: 12,
+  // 2つの豆の「差」から起こる補正。gap以上の差があるとき、差が大きいほど強く働く。
+  contrast: [
+    { axis: 'acid', gap: 30, effects: { acid: -6, sweet: 3 },
+      text: function (hi, lo) { return hi + 'の酸味と' + lo + 'の穏やかな酸味が混ざり、酸味の角が取れて丸くなります。'; } },
+    { axis: 'body', gap: 26, effects: { body: 5, aroma: -1 },
+      text: function (hi, lo) { return hi + 'のコクが' + lo + 'を支え、口当たりに厚みが出ます。'; } },
+    { axis: 'bitter', gap: 30, effects: { bitter: -3, sweet: 2 },
+      text: function (hi, lo) { return hi + 'の強い苦味を' + lo + 'がやわらげ、全体が飲みやすくなります。'; } }
+  ],
+  // 香りの強い豆が一定量あると、香りが全体に広がる。
+  booster: { min: 78, minShare: 0.1, gain: 9, effects: { aroma: 1 },
+    text: function (n, pct) { return n + 'が' + pct + '%入ることで、ブレンド全体の香りが引き立ちます。'; } },
+  // 苦味の強い豆が多いと、苦味が前面に出て他の要素を覆う。
+  heavy: { min: 62, start: 0.3, effects: { bitter: 10, sweet: -5, acid: -4, aroma: -3, body: 3 },
+    text: function (pct) { return '苦味の強い豆が合計' + pct + '%を占めるため、苦味が前に出て、酸味や香りが目立ちにくくなります。'; } },
+  // 甘味と酸味が近い水準だと、まろやかさが出る。
+  balance: { minBoth: 48, maxGap: 14, effects: { sweet: 3, aroma: 2 },
+    text: '甘味と酸味が同じくらいの強さで釣り合い、角のないまろやかさが出ます。' },
+  // 特定の組み合わせ(相乗効果・打ち消し合い)
+  pairs: [
+    { a: 'brazil', b: 'ethiopia', effects: { sweet: 4, acid: -3, aroma: 1 }, text: 'ブラジルの甘味がエチオピアの酸味を丸くし、華やかさを残しつつ飲みやすくなります。' },
+    { a: 'brazil', b: 'kenya', effects: { acid: -5, sweet: 3 }, text: 'ブラジルの穏やかな甘味が、ケニアの鮮烈な酸味をやわらげます。' },
+    { a: 'brazil', b: 'kilimanjaro', effects: { acid: -4, sweet: 2 }, text: 'ブラジルが土台になり、キリマンジャロの酸味が穏やかになります。' },
+    { a: 'brazil', b: 'geisha', effects: { sweet: 3, aroma: 2 }, text: 'ブラジルの土台がゲイシャの香りを支え、甘味が増します。' },
+    { a: 'brazil', b: 'mandheling', effects: { body: 4, bitter: 3 }, text: 'コクが重なって深みが増しますが、軽さは失われます。' },
+    { a: 'mandheling', b: 'kenya', effects: { body: 3, aroma: 2 }, text: 'マンデリンの重さとケニアの酸が対照的で、味に奥行きが出ます。' },
+    { a: 'mandheling', b: 'ethiopia', effects: { acid: -3, aroma: -4 }, text: '個性の強い者同士が打ち消し合い、エチオピアの香りがぼやけやすくなります。' },
+    { a: 'toraja', b: 'mandheling', effects: { body: 4, sweet: -2 }, text: '重厚さが重なって、ややどっしりした味になります。' },
+    { a: 'vietnam', b: 'ethiopia', effects: { aroma: -6, acid: -4 }, text: 'ベトナムの強い苦味が、エチオピアの繊細な香りと酸味を覆い隠します。' },
+    { a: 'vietnam', b: 'india', effects: { bitter: 5, aroma: -4 }, text: '重い方向に偏り、苦味が前面に出ます。' },
+    { a: 'geisha', b: 'pacamara', effects: { aroma: 4, sweet: 2 }, text: '香りの高い品種同士で、香りが相乗的に高まります。' },
+    { a: 'geisha', b: 'maragogype', effects: { body: 3, aroma: 2 }, text: 'マラゴジッペの厚みがゲイシャの繊細な香りを支えます。' },
+    { a: 'bluemountain', b: 'kona', effects: { sweet: 2, aroma: 2 }, text: '同じ系統のクリーンな味わいで、まろやかさが増します。' },
+    { a: 'colombia', b: 'guatemala', effects: { sweet: 2, body: 2 }, text: 'バランス型同士で、味に安定感が出ます。' },
+    { a: 'ethiopia', b: 'mocha', effects: { aroma: 3, acid: 3 }, text: '華やかな香りと酸味が重なり、フルーティーさが強まります。' }
+  ]
+};
+
+/* ============================================================
+   保存データ(ブラウザのlocalStorage。使えない場合はメモリのみ)
+   ============================================================ */
+var mem = {};
+function load(k, def) {
+  try { var v = localStorage.getItem('blendlab.' + k); if (v) { return JSON.parse(v); } } catch (e) {}
+  return mem[k] !== undefined ? mem[k] : def;
+}
+function save(k, v) { mem[k] = v; try { localStorage.setItem('blendlab.' + k, JSON.stringify(v)); } catch (e) {} }
+
+var store = {
+  recipes: load('recipes', []),
+  ov: load('overrides', {}),
+  custom: load('custom', [])
+};
+function persist() { save('recipes', store.recipes); save('overrides', store.ov); save('custom', store.custom); }
+
+function allBeans() {
+  var list = BASE_BEANS.map(function (b) {
+    var o = store.ov[b.id];
+    if (!o) { return b; }
+    var m = {}; Object.keys(b).forEach(function (k) { m[k] = b[k]; });
+    Object.keys(o).forEach(function (k) { m[k] = o[k]; });
+    m.taste = {}; AXK.forEach(function (k) { m.taste[k] = (o.taste && o.taste[k] != null) ? o.taste[k] : b.taste[k]; });
+    m.edited = true;
+    return m;
+  });
+  store.custom.forEach(function (c) { var m = {}; Object.keys(c).forEach(function (k) { m[k] = c[k]; }); m.custom = true; list.push(m); });
+  return list;
+}
+function beanMap() { var m = {}; allBeans().forEach(function (b) { m[b.id] = b; }); return m; }
+
+/* ============================================================
+   計算ロジック
+   ============================================================ */
+function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+
+/* items: [{bean, share(0〜1)}] → {base, final, adj, notes} */
+function predict(items) {
+  var base = {}, adj = {}, notes = [];
+  AXK.forEach(function (k) {
+    base[k] = items.reduce(function (s, i) { return s + i.share * i.bean.taste[k]; }, 0);
+    adj[k] = 0;
+  });
+  function apply(eff, f, text) {
+    var e = {}, mag = 0;
+    Object.keys(eff).forEach(function (k) { var d = eff[k] * f * MODEL.scale; e[k] = d; adj[k] += d; mag += Math.abs(d); });
+    notes.push({ text: text, effects: e, mag: mag });
+  }
+  // 1) 2つの豆の組み合わせ
+  for (var i = 0; i < items.length; i++) {
+    for (var j = i + 1; j < items.length; j++) {
+      var A = items[i], Bb = items[j];
+      var pw = 4 * A.share * Bb.share; // 50:50のとき1
+      if (pw <= 0) { continue; }
+      MODEL.contrast.forEach(function (r) {
+        var va = A.bean.taste[r.axis], vb = Bb.bean.taste[r.axis];
+        var st = clamp((Math.abs(va - vb) - r.gap) / 30, 0, 1);
+        if (st > 0) {
+          var hi = va >= vb ? A.bean.name : Bb.bean.name, lo = va >= vb ? Bb.bean.name : A.bean.name;
+          apply(r.effects, st * pw, r.text(hi, lo));
+        }
+      });
+      MODEL.pairs.forEach(function (p) {
+        if ((A.bean.id === p.a && Bb.bean.id === p.b) || (A.bean.id === p.b && Bb.bean.id === p.a)) { apply(p.effects, pw, p.text); }
+      });
+    }
+  }
+  // 2) 香りの強い豆
+  items.forEach(function (it) {
+    var b = MODEL.booster, a = it.bean.taste.aroma;
+    if (a >= b.min && it.share >= b.minShare) {
+      var f = it.share * (a - b.min + 8) / (100 - b.min + 8);
+      var e = { aroma: b.gain * f };
+      var d = e.aroma * MODEL.scale; adj.aroma += d;
+      notes.push({ text: b.text(it.bean.name, Math.round(it.share * 100)), effects: { aroma: d }, mag: Math.abs(d) });
+    }
+  });
+  // 3) 苦味の強い豆が多いとき
+  var hv = MODEL.heavy, bs = items.reduce(function (s, it) { return s + (it.bean.taste.bitter >= hv.min ? it.share : 0); }, 0);
+  var ex = clamp((bs - hv.start) / (1 - hv.start), 0, 1);
+  if (ex > 0) { apply(hv.effects, ex, hv.text(Math.round(bs * 100))); }
+  // 4) 甘味と酸味の釣り合い
+  var bl = MODEL.balance;
+  if (Math.min(base.acid, base.sweet) >= bl.minBoth && Math.abs(base.acid - base.sweet) <= bl.maxGap) { apply(bl.effects, 1, bl.text); }
+
+  var fin = {};
+  AXK.forEach(function (k) {
+    adj[k] = clamp(adj[k], -MODEL.maxAdj, MODEL.maxAdj);
+    fin[k] = clamp(base[k] + adj[k], 0, 100);
+  });
+  notes = notes.filter(function (n) { return n.mag >= 0.8; }).sort(function (a, b) { return b.mag - a.mag; });
+  return { base: base, final: fin, adj: adj, notes: notes };
+}
+
+function rnd(o) { var r = {}; AXK.forEach(function (k) { r[k] = Math.round(o[k]); }); return r; }
+
+/* 予測値から説明文を作る。同じ値なら同じ文、値が変われば別の言い回しになる。 */
+function describe(v) {
+  var vals = AXK.map(function (k) { return v[k]; });
+  var range = Math.max.apply(null, vals) - Math.min.apply(null, vals);
+  var seed = Math.round(vals.reduce(function (a, b) { return a + b; }, 0));
+  function pick(arr) { return arr[seed % arr.length]; }
+  var key, head, used = {};
+  if (v.aroma >= 72 && v.acid >= 60) { key = 'floral'; used.aroma = used.acid = 1;
+    head = pick(['華やかな香りと明るい酸味が前に出る、フルーティーな印象です。', '立ちのぼる華やかな香りと、明るい酸味が際立つ味わいです。']); }
+  else if (v.bitter >= 58 && v.body >= 62) { key = 'heavy'; used.bitter = used.body = 1;
+    head = pick(['苦味とコクがしっかりした、重厚な味わいです。', 'どっしりしたコクと苦味が主役の、力強い味わいです。']); }
+  else if (v.sweet >= 60 && v.acid >= 52 && Math.abs(v.sweet - v.acid) <= 12) { key = 'mellow'; used.sweet = used.acid = 1;
+    head = pick(['甘味と酸味のバランスが取れた、まろやかな味わいです。', '甘味と酸味が寄り添う、丸みのある味わいです。']); }
+  else if (v.acid >= 58 && v.bitter < 46) { key = 'light'; used.acid = 1;
+    head = pick(['軽やかでフルーティーな、すっきりした印象です。', '酸味が主役の、軽快で明るい味わいです。']); }
+  else if (v.sweet >= 62) { key = 'sweet'; used.sweet = 1;
+    head = pick(['甘味がふくらむ、やさしい口当たりです。', '舌にやわらかく広がる甘味が中心の味わいです。']); }
+  else if (range <= 20) { key = 'balance';
+    head = pick(['どの要素も突出せず、飲み疲れしにくいバランス型です。', '尖ったところが少なく、毎日飲みやすい穏やかな味わいです。']); }
+  else {
+    var top = AXK.slice().sort(function (a, b) { return v[b] - v[a]; })[0]; used[top] = 1; key = 'other';
+    head = AXN[top] + 'を中心に、ほかの味がゆるやかに寄り添う味わいです。';
+  }
+  var cands = [
+    [v.body >= 68 && !used.body, 'コクがあり、飲み込んだあとの余韻が長く続きます。'],
+    [v.body <= 40, '口当たりは軽く、後味はすっきりしています。'],
+    [v.aroma >= 75 && !used.aroma, 'カップに近づくと、香りがふわっと広がります。'],
+    [v.aroma <= 40, '香りは控えめで、味わいそのものが主役です。'],
+    [v.acid <= 35, '酸味はおだやかで、飲み疲れしにくい味です。'],
+    [v.acid >= 72 && !used.acid, '酸味がはっきりしているので、好みが分かれるかもしれません。'],
+    [v.bitter >= 65 && !used.bitter, '苦味の輪郭がしっかりしています。'],
+    [v.bitter <= 30, '苦味はほとんど感じにくい仕上がりです。'],
+    [v.sweet >= 65 && !used.sweet, '舌に残る甘味が全体をまとめます。'],
+    [v.sweet <= 35, '甘味は控えめで、キレのある印象です。']
+  ].filter(function (c) { return c[0]; }).map(function (c) { return c[1]; });
+  var sec = cands.slice(0, 2);
+  if (!sec.length) { sec = ['全体としてクセの少ない仕上がりです。']; }
+  var how = v.bitter >= 60 ? 'ミルクを加えても味が負けにくそうです。'
+    : v.acid >= 62 ? 'ストレートで、少し冷めてからも楽しめそうです。'
+    : v.sweet >= 60 ? 'ブラックのままでも甘味を感じやすい仕上がりです。'
+    : 'ブラックでもミルク入りでも合わせやすそうです。';
+  return { key: key, paras: [head + sec.join(''), how] };
+}
+var SUFFIX = { floral: '華やか', heavy: '重厚', mellow: 'まろやか', light: '軽やか', sweet: 'やさしい', balance: 'バランス', other: '個性派' };
+function suggestName(items, v) {
+  var s = items.slice().sort(function (a, b) { return b.share - a.share; });
+  var d = describe(v);
+  var lead = s[0].share >= 0.35 ? s[0].bean.name + '主体' : s[0].bean.name + '×' + (s[1] ? s[1].bean.name : '');
+  return lead + 'の' + SUFFIX[d.key] + 'ブレンド';
+}
+
+/* ============================================================
+   画面の状態
+   ============================================================ */
+var draft = load('draft', {});
+var S = {
+  screen: 'home',
+  sel: (draft.sel || []).slice(0, 5),
+  pct: draft.pct || {},
+  name: draft.name || '',
+  editId: draft.editId || null,
+  auto: true,
+  q: '',
+  cmp: [],
+  tasting: null,
+  confirmDel: null,
+  modal: null,
+  exportText: null
+};
+function saveDraft() { save('draft', { sel: S.sel, pct: S.pct, name: S.name, editId: S.editId }); }
+
+var $ = function (id) { return document.getElementById(id); };
+var view = $('view'), bar = $('bar'), steps = $('steps'), modal = $('modal'), toastEl = $('toast');
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+var toastT = 0;
+function toast(msg) { toastEl.textContent = msg; toastEl.hidden = false; clearTimeout(toastT); toastT = setTimeout(function () { toastEl.hidden = true; }, 2400); }
+
+function distribute(ids, raw, total) {
+  var fl = raw.map(Math.floor), r = total - fl.reduce(function (a, b) { return a + b; }, 0);
+  var order = raw.map(function (x, i) { return [x - fl[i], i]; }).sort(function (a, b) { return b[0] - a[0]; });
+  for (var k = 0; k < r; k++) { fl[order[k % order.length][1]]++; }
+  ids.forEach(function (id, i) { S.pct[id] = fl[i]; });
+}
+function equalSplit() {
+  var n = S.sel.length; S.pct = {};
+  if (!n) { return; }
+  distribute(S.sel, S.sel.map(function () { return 100 / n; }), 100);
+}
+function normalize() {
+  var n = S.sel.length; if (!n) { return; }
+  var sum = S.sel.reduce(function (s, id) { return s + (S.pct[id] || 0); }, 0);
+  if (sum <= 0) { equalSplit(); return; }
+  distribute(S.sel, S.sel.map(function (id) { return (S.pct[id] || 0) * 100 / sum; }), 100);
+}
+function setPct(id, v) {
+  v = clamp(Math.round(+v || 0), 0, 100);
+  if (!S.auto) { S.pct[id] = v; return; }
+  var others = S.sel.filter(function (x) { return x !== id; });
+  if (!others.length) { S.pct[id] = 100; return; }
+  var rest = 100 - v, so = others.reduce(function (s, x) { return s + (S.pct[x] || 0); }, 0);
+  S.pct[id] = v;
+  distribute(others, others.map(function (x) { return so > 0 ? (S.pct[x] || 0) * rest / so : rest / others.length; }), rest);
+}
+function pctSum() { return S.sel.reduce(function (s, id) { return s + (S.pct[id] || 0); }, 0); }
+function activeCount() { return S.sel.filter(function (id) { return (S.pct[id] || 0) > 0; }).length; }
+function mixValid() { return pctSum() === 100 && activeCount() >= 3; }
+function currentItems() {
+  var m = beanMap();
+  return S.sel.filter(function (id) { return m[id] && (S.pct[id] || 0) > 0; }).map(function (id) { return { bean: m[id], share: S.pct[id] / 100 }; });
+}
+function currentPred() { return predict(currentItems()); }
+
+/* ============================================================
+   描画の部品
+   ============================================================ */
+function radar(series, label) {
+  var cx = 150, cy = 128, R = 88, n = 5;
+  function pt(i, v) { var a = -Math.PI / 2 + i * 2 * Math.PI / n; return [cx + Math.cos(a) * R * v / 100, cy + Math.sin(a) * R * v / 100]; }
+  var s = '<svg class="radar" viewBox="0 0 300 244" role="img" aria-label="' + esc(label) + '">';
+  [25, 50, 75, 100].forEach(function (r) {
+    s += '<polygon class="ring" points="' + AXK.map(function (k, i) { return pt(i, r).join(','); }).join(' ') + '"/>';
+  });
+  AXK.forEach(function (k, i) {
+    var p = pt(i, 100); s += '<line class="axis" x1="' + cx + '" y1="' + cy + '" x2="' + p[0].toFixed(1) + '" y2="' + p[1].toFixed(1) + '"/>';
+    var a = -Math.PI / 2 + i * 2 * Math.PI / n, lx = cx + Math.cos(a) * (R + 14), ly = cy + Math.sin(a) * (R + 14) + 4;
+    var c = Math.cos(a), anchor = c < -0.3 ? 'end' : c > 0.3 ? 'start' : 'middle';
+    s += '<text x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="' + anchor + '">' + AXN[k] + '</text>';
+  });
+  series.forEach(function (se) {
+    var pts = AXK.map(function (k, i) { return pt(i, se.v[k]).map(function (x) { return x.toFixed(1); }).join(','); }).join(' ');
+    s += '<polygon points="' + pts + '" fill="' + (se.fill === false ? 'none' : 'var(' + se.c + ')') + '" fill-opacity="' + (se.fill === false ? 0 : 0.16) + '" stroke="var(' + se.c + ')" stroke-width="' + (se.w || 2) + '"' + (se.dash ? ' stroke-dasharray="4 3"' : '') + ' stroke-linejoin="round"/>';
+    if (!se.dash) {
+      AXK.forEach(function (k, i) { var p = pt(i, se.v[k]); s += '<circle class="pt" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3.5" fill="var(' + se.c + ')"/>'; });
+    }
+  });
+  return s + '</svg>';
+}
+function glyph(t) {
+  return '<span class="glyph" aria-hidden="true">' + AXK.map(function (k) {
+    return '<i><s style="height:' + Math.max(2, Math.round(t[k] * 0.28)) + 'px"></s>' + AXS[k] + '</i>';
+  }).join('') + '</span>';
+}
+function stackBar(items) {
+  var s = '<div class="stack" role="img" aria-label="配合の内訳">';
+  items.forEach(function (it, i) { s += '<i style="width:' + it.pct + '%;background:var(--s' + (i % 5 + 1) + ')"></i>'; });
+  s += '</div><div class="legend">';
+  items.forEach(function (it, i) { s += '<span><i style="background:var(--s' + (i % 5 + 1) + ')"></i>' + esc(it.name) + ' <b class="mono">' + it.pct + '%</b></span>'; });
+  return s + '</div>';
+}
+function bars(p) {
+  return AX.map(function (a) {
+    var k = a[0];
+    return '<div class="brow"><span class="l">' + a[1] + '</span><div class="track"><i style="width:' + p.final[k].toFixed(1) + '%"></i><u style="left:calc(' + p.base[k].toFixed(1) + '% - 1px)"></u></div><span class="v">' + Math.round(p.final[k]) + '</span></div>';
+  }).join('');
+}
+function fmtEff(e) {
+  return Object.keys(e).filter(function (k) { return Math.abs(e[k]) >= 0.5; }).map(function (k) {
+    var d = e[k]; return '<span class="' + (d > 0 ? 'p' : 'm') + '">' + AXN[k] + ' ' + (d > 0 ? '+' : '−') + Math.abs(d).toFixed(1) + '</span>';
+  }).join('');
+}
+function fmtDate(t) { var d = new Date(t); return (d.getMonth() + 1) + '/' + d.getDate(); }
+
+/* ============================================================
+   画面: ホーム
+   ============================================================ */
+var SAMPLE = [{ id: 'brazil', pct: 50 }, { id: 'colombia', pct: 30 }, { id: 'ethiopia', pct: 20 }];
+function homeHTML() {
+  var m = beanMap();
+  var p = predict(SAMPLE.map(function (s) { return { bean: m[s.id], share: s.pct / 100 }; }));
+  var hasDraft = S.sel.length > 0;
+  return '<div class="hero">' +
+    '<p class="eyebrow">COFFEE BLEND SIMULATOR</p>' +
+    '<h1>BLEND<span>LAB</span></h1>' +
+    '<p class="lead">27種類の豆から3〜5種類を選び、配合率を決めると、酸味・苦味・甘味・コク・香りがどう変わるかを予測します。単純な平均だけでなく、豆同士の相性による変化も加えて計算します。</p>' +
+    '<div class="cta"><button class="btn primary" data-act="new">ブレンドを作る</button>' +
+    (hasDraft ? '<button class="btn" data-act="resume">作成中の続き（' + S.sel.length + '種）</button>' : '') +
+    '<button class="btn quiet" data-act="goSaved">保存したブレンド（' + store.recipes.length + '）</button></div></div>' +
+    '<section class="sheet" aria-label="予測の例"><div class="sheet-h"><b>予測の例</b><span class="tag">サンプル</span></div>' +
+    '<p class="small">' + SAMPLE.map(function (s) { return esc(m[s.id].name) + ' ' + s.pct + '%'; }).join(' / ') + '</p>' +
+    radar([{ v: p.base, c: '--ink2', dash: true, fill: false, w: 1.5 }, { v: p.final, c: '--s1' }], '例のブレンドの味のレーダーチャート') +
+    '<div class="keyline"><span><i class="k1"></i>相性補正後の予測</span><span><i class="k2"></i>配合の平均のみ（点線）</span></div>' +
+    '<div class="cta"><button class="btn small" data-act="sample">この例から始める</button></div></section>' +
+    '<ol class="how"><li><div><b>豆を選ぶ</b><span class="small">地域ごとに並んだ27種類から、3〜5種類を選びます。</span></div></li>' +
+    '<li><div><b>配合率を決める</b><span class="small">スライダーか数字で調整します。合計は常に100%です。</span></div></li>' +
+    '<li><div><b>味の予測を見る</b><span class="small">5項目の数値とレーダーチャート、相性による変化の理由を確認し、レシピを保存できます。</span></div></li></ol>' +
+    '<p class="disc">表示される味の数値は、仮のモデルによる推定値です。実際の味を保証するものではありません。試飲した評価を記録して、予測との差を見比べることもできます。</p>';
+}
+
+/* ============================================================
+   画面: 豆選択
+   ============================================================ */
+function beanCard(b) {
+  var on = S.sel.indexOf(b.id) >= 0, full = S.sel.length >= 5;
+  var first = b.desc.split('。')[0] + '。';
+  return '<article class="bean' + (on ? ' on' : '') + (full && !on ? ' full' : '') + '">' +
+    '<button class="bean-main" data-act="toggle" data-id="' + b.id + '" aria-pressed="' + on + '"' + (full && !on ? ' aria-disabled="true"' : '') + '>' +
+    '<span class="check" aria-hidden="true"></span>' +
+    '<span class="bean-t"><b>' + esc(b.name) + '</b><small>' + esc(b.kind) + ' ・ ' + esc(b.origin) + '</small><p>' + esc(first) + '</p></span>' +
+    glyph(b.taste) + '</button>' +
+    '<button class="bean-i" data-act="detail" data-id="' + b.id + '">詳細を見る' + (b.edited ? '（編集済み）' : '') + '</button></article>';
+}
+function beanListHTML() {
+  var q = S.q.trim().toLowerCase(), html = '', any = false;
+  REGIONS.concat(['その他']).forEach(function (r) {
+    var list = allBeans().filter(function (b) {
+      var reg = REGIONS.indexOf(b.region) >= 0 ? b.region : 'その他';
+      return reg === r && (!q || (b.name + b.origin + b.kind + b.region).toLowerCase().indexOf(q) >= 0);
+    });
+    if (!list.length) { return; }
+    any = true;
+    html += '<section class="region"><h2>' + esc(r) + '<small>' + list.length + '種類</small></h2><div class="beans">' + list.map(beanCard).join('') + '</div></section>';
+  });
+  return any ? html : '<p class="empty">「' + esc(S.q) + '」に合う豆はありません。</p>';
+}
+function selectHTML() {
+  return '<h1 class="screen-t">豆を選ぶ</h1><p class="screen-d">3〜5種類を選んでください。カード右上の棒は、酸・苦・甘・コク・香の強さです（仮の推定値）。</p>' +
+    '<div class="tools"><input class="search" id="q" type="search" placeholder="豆の名前・産地で絞り込み" value="' + esc(S.q) + '" aria-label="豆を絞り込む">' +
+    '<button class="btn quiet small" data-act="addBean">＋ 豆を追加</button></div><div id="beanlist">' + beanListHTML() + '</div>';
+}
+
+/* ============================================================
+   画面: 配合
+   ============================================================ */
+function mixHTML() {
+  var m = beanMap();
+  var rows = S.sel.map(function (id, i) {
+    var b = m[id]; if (!b) { return ''; }
+    return '<li class="row" data-row="' + id + '"><div class="row-h"><i class="sw" style="background:var(--s' + (i % 5 + 1) + ')"></i><b>' + esc(b.name) + '</b><small>' + esc(b.kind) + '</small>' +
+      '<button class="drop" data-act="drop" data-id="' + id + '">選択解除</button></div>' +
+      '<div class="row-b"><input type="range" min="0" max="100" step="1" data-role="rng" data-id="' + id + '" aria-label="' + esc(b.name) + 'の配合率">' +
+      '<label class="numbox"><input type="number" inputmode="numeric" min="0" max="100" step="1" data-role="num" data-id="' + id + '" aria-label="' + esc(b.name) + 'の配合率（数値）"><span>%</span></label></div></li>';
+  }).join('');
+  return '<h1 class="screen-t">配合を決める</h1><p class="screen-d">スライダーか数字で調整します。上の味のメーターは、動かすたびに更新されます。</p>' +
+    '<div class="meters"><div class="meters-in" id="meters"></div></div>' +
+    '<div class="sumrow"><span class="sum" id="sum"></span>' +
+    '<button class="btn quiet small" data-act="equal">均等にする</button><button class="btn quiet small" data-act="norm" id="normbtn">合計を100に調整</button>' +
+    '<label class="tgl"><input type="checkbox" id="auto"' + (S.auto ? ' checked' : '') + '>ほかの豆も自動で調整</label></div>' +
+    '<ul class="rows">' + rows + '</ul><div class="cta"><button class="btn quiet" data-act="toSelect">豆を追加・入れ替える</button></div>';
+}
+function syncMix(skipEl) {
+  if (S.screen !== 'mix') { return; }
+  S.sel.forEach(function (id) {
+    var r = view.querySelector('[data-row="' + id + '"]'); if (!r) { return; }
+    var v = S.pct[id] || 0, rng = r.querySelector('[data-role=rng]'), num = r.querySelector('[data-role=num]');
+    rng.value = v; if (num !== skipEl) { num.value = v; }
+    r.querySelector('.drop').classList.toggle('hot', v === 0);
+  });
+  var sum = pctSum(), el = $('sum');
+  el.textContent = '合計 ' + sum + '%'; el.className = 'sum ' + (sum === 100 ? 'ok' : 'ng');
+  var nb = $('normbtn'); if (nb) { nb.hidden = sum === 100; }
+  var p = currentPred(), has = currentItems().length > 0;
+  $('meters').innerHTML = AX.map(function (a) {
+    var v = has ? Math.round(p.final[a[0]]) : 0;
+    return '<div class="mt"><div class="v">' + v + '</div><div class="col"><i style="height:' + v + '%"></i></div><div class="n">' + a[1] + '</div></div>';
+  }).join('');
+  renderBar();
+}
+
+/* ============================================================
+   画面: 予測結果
+   ============================================================ */
+function resultHTML() {
+  var items = currentItems(), p = predict(items), d = describe(p.final);
+  if (!S.name) { S.name = suggestName(items, p.final); saveDraft(); }
+  var comp = S.sel.filter(function (id) { return S.pct[id] > 0; }).map(function (id) { return { name: beanMap()[id].name, pct: S.pct[id] }; });
+  var notes = p.notes.slice(0, 6);
+  var adjTable = '<div class="scroll-x"><table class="dtable"><thead><tr><th></th>' + AX.map(function (a) { return '<th>' + a[1] + '</th>'; }).join('') + '</tr></thead><tbody>' +
+    '<tr><td>配合の平均</td>' + AXK.map(function (k) { return '<td>' + p.base[k].toFixed(1) + '</td>'; }).join('') + '</tr>' +
+    '<tr><td>相性補正</td>' + AXK.map(function (k) { var a = p.adj[k]; return '<td class="' + (a > 0.05 ? 'p' : a < -0.05 ? 'm' : '') + '" style="' + (a > 0.05 ? 'color:var(--ok)' : a < -0.05 ? 'color:var(--bad)' : '') + '">' + (a >= 0 ? '+' : '−') + Math.abs(a).toFixed(1) + '</td>'; }).join('') + '</tr>' +
+    '<tr><td><b>予測</b></td>' + AXK.map(function (k) { return '<td><b>' + p.final[k].toFixed(1) + '</b></td>'; }).join('') + '</tr></tbody></table></div>';
+  return '<h1 class="screen-t">味の予測</h1><p class="screen-d">仮のモデルによる推定値です。実際の味を保証するものではありません。</p>' +
+    '<section class="panel"><h2>配合</h2>' + stackBar(comp) + '</section>' +
+    '<section class="panel"><h2>5つの味</h2>' +
+    radar([{ v: p.base, c: '--ink2', dash: true, fill: false, w: 1.5 }, { v: p.final, c: '--s1' }], '予測した味のレーダーチャート') +
+    '<div style="margin-top:8px">' + bars(p) + '</div>' +
+    '<div class="keyline"><span><i class="k1"></i>相性補正後の予測</span><span><i class="k2"></i>配合の平均のみ</span></div></section>' +
+    '<section class="panel desc"><h2>味の特徴</h2>' + d.paras.map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') + '</section>' +
+    '<section class="panel"><h2>豆同士の相性</h2>' +
+    (notes.length ? '<ul class="notes">' + notes.map(function (n) { return '<li><span>' + esc(n.text) + '</span><span class="eff">' + fmtEff(n.effects) + '</span></li>'; }).join('') + '</ul>'
+      : '<p class="small">目立った相性補正はありません。配合の平均に近い結果です。</p>') +
+    '<div style="margin-top:14px">' + adjTable + '</div>' +
+    '<p class="small" style="margin-top:10px">補正の大きさは、モデルversion ' + esc(MODEL.version) + ' の仮の数値で決めています。試飲の評価をためて見直す前提のものです。</p></section>' +
+    '<section class="panel"><h2>保存する</h2><div class="field" style="margin-top:0"><label for="bname">ブレンド名</label><input type="text" id="bname" maxlength="40" value="' + esc(S.name) + '"></div></section>';
+}
+
+/* ============================================================
+   画面: 保存・比較
+   ============================================================ */
+function recHTML(r) {
+  var on = S.cmp.indexOf(r.id) >= 0, tOpen = S.tasting === r.id;
+  var tl = (r.tastings || []).slice().reverse();
+  var diffs = '';
+  if (tl.length) {
+    var avg = AXK.reduce(function (s, k) { return s + tl.reduce(function (t, x) { return t + Math.abs(x.vals[k] - r.pred[k]); }, 0) / tl.length; }, 0) / 5;
+    diffs = '<div class="tast"><h4>試飲評価（' + tl.length + '件）　予測との平均差 ' + avg.toFixed(1) + '</h4><ul class="tlist">' + tl.map(function (x) {
+      return '<li>' + fmtDate(x.at) + '　' + AX.map(function (a) { var dv = x.vals[a[0]] - r.pred[a[0]]; return a[1] + ' ' + x.vals[a[0]] + '<span class="small">(' + (dv >= 0 ? '+' : '−') + Math.abs(dv) + ')</span>'; }).join('　') + (x.memo ? '<br><span class="small">' + esc(x.memo) + '</span>' : '') + '</li>';
+    }).join('') + '</ul></div>';
+  }
+  var form = '';
+  if (tOpen) {
+    form = '<div class="tast"><h4>試飲した味を記録（0〜100）</h4>' + AX.map(function (a) {
+      return '<div class="trow"><span>' + a[1] + '</span><input type="range" min="0" max="100" step="1" value="' + r.pred[a[0]] + '" data-role="tr" data-k="' + a[0] + '" aria-label="' + a[1] + '"><output id="tr-' + a[0] + '">' + r.pred[a[0]] + '</output></div>';
+    }).join('') + '<div class="field"><label for="tmemo">メモ（任意）</label><input type="text" id="tmemo" maxlength="80" placeholder="豆の状態、焙煎、淹れ方など"></div>' +
+      '<div class="rec-a"><button class="btn small primary" data-act="tastSave" data-id="' + r.id + '">評価を登録</button><button class="btn small quiet" data-act="tastClose">閉じる</button></div></div>';
+  }
+  var del = S.confirmDel === r.id
+    ? '<button class="btn small danger" data-act="delGo" data-id="' + r.id + '">本当に削除する</button><button class="btn small quiet" data-act="delNo">やめる</button>'
+    : '<button class="btn small quiet" data-act="del" data-id="' + r.id + '">削除</button>';
+  return '<article class="rec"><div class="rec-h"><label class="cb"><input type="checkbox" data-role="cmp" data-id="' + r.id + '"' + (on ? ' checked' : '') + ' aria-label="' + esc(r.name) + 'を比較に入れる"></label>' +
+    '<div><h3>' + esc(r.name) + '</h3><p class="small">' + fmtDate(r.updatedAt || r.createdAt) + ' 保存 ・ モデル ' + esc(r.ver || '') + '</p></div></div>' +
+    stackBar(r.items) +
+    '<div class="rec-vals">' + AX.map(function (a) { return '<div><b>' + r.pred[a[0]] + '</b><small>' + a[1] + '</small></div>'; }).join('') + '</div>' +
+    '<div class="rec-a"><button class="btn small" data-act="edit" data-id="' + r.id + '">編集</button><button class="btn small quiet" data-act="tast" data-id="' + r.id + '">試飲評価</button>' + del + '</div>' + form + diffs + '</article>';
+}
+function compareHTML() {
+  var list = S.cmp.map(function (id) { return store.recipes.filter(function (r) { return r.id === id; })[0]; }).filter(Boolean);
+  if (list.length < 2) { return '<section class="panel"><h2>比較</h2><p class="small">レシピのチェックを2つ以上（最大4つ）入れると、ここに比較が表示されます。</p></section>'; }
+  var series = list.map(function (r, i) { return { v: r.pred, c: '--s' + (i + 1) }; });
+  var head = '<tr><th></th>' + list.map(function (r, i) { return '<th style="color:var(--s' + (i + 1) + ')">' + esc(r.name) + '</th>'; }).join('') + '</tr>';
+  var body = AX.map(function (a) {
+    var mx = Math.max.apply(null, list.map(function (r) { return r.pred[a[0]]; }));
+    return '<tr><td>' + a[1] + '</td>' + list.map(function (r) { var v = r.pred[a[0]]; return '<td class="' + (v === mx ? 'best' : '') + '">' + v + '</td>'; }).join('') + '</tr>';
+  }).join('');
+  return '<section class="panel"><h2>比較</h2>' + radar(series, '保存したブレンドの比較レーダーチャート') +
+    '<div class="cmp-legend">' + list.map(function (r, i) { return '<span><i style="background:var(--s' + (i + 1) + ')"></i>' + esc(r.name) + '</span>'; }).join('') + '</div>' +
+    '<div class="scroll-x" style="margin-top:12px"><table class="dtable"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div><p class="small" style="margin-top:6px">太字はその項目で最も高い値です。</p></section>';
+}
+function savedHTML() {
+  var n = store.recipes.length;
+  var out = '<h1 class="screen-t">保存・比較</h1><p class="screen-d">保存したブレンドの一覧です。チェックを入れて比較できます。</p>';
+  if (!n) {
+    return out + '<div class="empty"><p>保存したブレンドはまだありません。</p><button class="btn primary" data-act="new">ブレンドを作る</button></div>';
+  }
+  out += compareHTML() + '<div id="reclist">' + store.recipes.map(recHTML).join('') + '</div>';
+  out += '<section class="panel"><h2>評価データの書き出し</h2><p class="small">レシピ、予測値、試飲評価をJSONにまとめます。豆ごとの基本味や相性補正を見直すときの材料になります。</p>' +
+    '<div class="rec-a"><button class="btn small" data-act="export">コピーする</button></div>' +
+    (S.exportText ? '<textarea class="export" id="exp" readonly>' + esc(S.exportText) + '</textarea>' : '') + '</section>';
+  return out;
+}
+
+/* ============================================================
+   モーダル(豆の詳細・編集)
+   ============================================================ */
+function detailHTML(b) {
+  return '<h2>' + esc(b.name) + '</h2><div class="chips"><span class="tag">' + esc(b.region) + '</span><span class="tag">' + esc(b.kind) + '</span><span class="tag">' + esc(b.origin) + '</span>' +
+    (b.grade ? '<span class="tag">等級例: ' + esc(b.grade) + '</span>' : '') + (b.roast ? '<span class="tag">焙煎: ' + esc(b.roast) + '</span>' : '') +
+    (b.edited ? '<span class="edt">編集済み</span>' : '') + (b.custom ? '<span class="edt">追加した豆</span>' : '') + '</div>' +
+    AX.map(function (a) { return '<div class="brow"><span class="l">' + a[1] + '</span><div class="track"><i style="width:' + b.taste[a[0]] + '%"></i></div><span class="v">' + b.taste[a[0]] + '</span></div>'; }).join('') +
+    '<p style="margin-top:12px">' + esc(b.desc) + '</p><p class="small" style="margin-top:8px">根拠: ' + esc(b.basis || BASIS) + '</p>' +
+    '<div class="mact"><button class="btn primary" data-act="mclose">閉じる</button><button class="btn quiet" data-act="medit" data-id="' + b.id + '">編集</button>' +
+    (b.edited ? '<button class="btn quiet" data-act="mreset" data-id="' + b.id + '">初期値に戻す</button>' : '') +
+    (b.custom ? '<button class="btn danger" data-act="mdelete" data-id="' + b.id + '">この豆を削除</button>' : '') + '</div>';
+}
+function editHTML(b) {
+  var isNew = !b;
+  b = b || { name: '', region: REGIONS[0], kind: KINDS[0], origin: '', grade: '', roast: '', desc: '', basis: '', taste: { acid: 50, bitter: 50, sweet: 50, body: 50, aroma: 50 } };
+  var reg = REGIONS.concat(['その他']);
+  return '<h2>' + (isNew ? '豆を追加' : esc(b.name) + 'を編集') + '</h2><p class="small">ここで変えた値は、このブラウザにだけ保存されます。</p>' +
+    '<div class="field"><label for="ed-name">名称</label><input type="text" id="ed-name" maxlength="30" value="' + esc(b.name) + '"></div>' +
+    '<div class="field"><label for="ed-region">地域区分</label><select id="ed-region">' + reg.map(function (r) { return '<option' + (r === b.region ? ' selected' : '') + '>' + esc(r) + '</option>'; }).join('') + '</select></div>' +
+    '<div class="field"><label for="ed-kind">分類（国名・地域名・銘柄名・品種名・等級名）</label><select id="ed-kind">' + KINDS.map(function (r) { return '<option' + (r === b.kind ? ' selected' : '') + '>' + esc(r) + '</option>'; }).join('') + '</select></div>' +
+    '<div class="field"><label for="ed-origin">原産国・地域</label><input type="text" id="ed-origin" maxlength="40" value="' + esc(b.origin) + '"></div>' +
+    '<div class="field"><label for="ed-grade">等級の例（任意）</label><input type="text" id="ed-grade" maxlength="40" value="' + esc(b.grade || '') + '"></div>' +
+    '<div class="field"><label for="ed-roast">焙煎度（任意）</label><input type="text" id="ed-roast" maxlength="30" value="' + esc(b.roast || '') + '"></div>' +
+    AX.map(function (a) { return '<div class="trow" style="margin-top:8px"><span>' + a[1] + '</span><input type="range" min="0" max="100" step="1" id="ed-' + a[0] + '" value="' + b.taste[a[0]] + '" data-role="edr" data-k="' + a[0] + '" aria-label="' + a[1] + '"><output id="edo-' + a[0] + '">' + b.taste[a[0]] + '</output></div>'; }).join('') +
+    '<div class="field"><label for="ed-desc">味の説明文</label><textarea id="ed-desc" maxlength="200">' + esc(b.desc) + '</textarea></div>' +
+    '<div class="field"><label for="ed-basis">データの根拠・参考情報</label><textarea id="ed-basis" maxlength="200">' + esc(b.basis || '') + '</textarea></div>' +
+    '<p id="ed-err" class="small" style="color:var(--bad)" hidden></p>' +
+    '<div class="mact"><button class="btn primary" data-act="msave" data-id="' + (isNew ? '' : b.id) + '">保存</button><button class="btn quiet" data-act="mclose">キャンセル</button></div>';
+}
+function showModal(html) {
+  modal.innerHTML = '<div class="sheetm" role="dialog" aria-modal="true" tabindex="-1">' + html + '</div>';
+  modal.hidden = false;
+  var d = modal.firstChild; if (d && d.focus) { d.focus(); }
+}
+function closeModal() { modal.hidden = true; modal.innerHTML = ''; S.modal = null; }
+
+/* ============================================================
+   ナビゲーション・下部バー
+   ============================================================ */
+function stepsHTML() {
+  if (S.screen === 'home') { return ''; }
+  var list = [['select', '選ぶ', true], ['mix', '配合', S.sel.length >= 3], ['result', '予測', S.sel.length >= 3 && mixValid()], ['saved', '保存', true]];
+  return list.map(function (s) { return '<button data-act="step" data-s="' + s[0] + '"' + (S.screen === s[0] ? ' aria-current="step"' : '') + (s[2] ? '' : ' disabled') + '>' + s[1] + '</button>'; }).join('');
+}
+function renderBar() {
+  var h = '';
+  if (S.screen === 'select') {
+    var n = S.sel.length;
+    h = '<div class="info"><b>' + n + ' / 5 種類</b><br>' + (n < 3 ? 'あと' + (3 - n) + '種類以上選んでください' : n >= 5 ? 'これ以上は追加できません' : 'このまま進めます') + '</div><button class="btn primary" data-act="toMix"' + (n < 3 ? ' disabled' : '') + '>配合を決める</button>';
+  } else if (S.screen === 'mix') {
+    var ok = mixValid(), msg = pctSum() !== 100 ? '合計を100%にしてください' : activeCount() < 3 ? '配合率が1%以上の豆が3種類以上必要です' : '準備できました';
+    h = '<div class="info"><b>合計 ' + pctSum() + '%</b><br><span class="' + (ok ? '' : 'msg') + '">' + msg + '</span></div><button class="btn primary" data-act="toResult"' + (ok ? '' : ' disabled') + '>味を予測する</button>';
+  } else if (S.screen === 'result') {
+    h = '<button class="btn quiet" data-act="toMix">配合に戻る</button>' +
+      (S.editId && store.recipes.some(function (r) { return r.id === S.editId; })
+        ? '<button class="btn quiet" data-act="saveNew">新規で保存</button><button class="btn primary grow" data-act="saveOver">上書き保存</button>'
+        : '<button class="btn primary grow" data-act="saveNew">保存する</button>');
+  }
+  bar.innerHTML = h ? '<div class="bar-in">' + h + '</div>' : '';
+  bar.hidden = !h;
+}
+function render(keepScroll) {
+  var html = { home: homeHTML, select: selectHTML, mix: mixHTML, result: resultHTML, saved: savedHTML }[S.screen]();
+  view.innerHTML = html;
+  steps.innerHTML = stepsHTML();
+  renderBar();
+  if (S.screen === 'mix') { syncMix(); }
+  if (!keepScroll) { window.scrollTo(0, 0); }
+}
+function go(s) { S.screen = s; S.confirmDel = null; render(); }
+
+/* ============================================================
+   操作
+   ============================================================ */
+function startNew(ids) {
+  S.sel = ids || []; S.pct = {}; S.name = ''; S.editId = null; equalSplit(); saveDraft();
+}
+function toggleBean(id) {
+  var i = S.sel.indexOf(id);
+  if (i >= 0) { S.sel.splice(i, 1); }
+  else { if (S.sel.length >= 5) { toast('選べる豆は5種類までです'); return; } S.sel.push(id); }
+  equalSplit(); S.name = ''; saveDraft();
+  $('beanlist').innerHTML = beanListHTML(); steps.innerHTML = stepsHTML(); renderBar();
+}
+function saveRecipe(asNew) {
+  var m = beanMap(), items = S.sel.filter(function (id) { return S.pct[id] > 0 && m[id]; }).map(function (id) { return { id: id, name: m[id].name, pct: S.pct[id] }; });
+  var p = currentPred(), now = Date.now();
+  var name = (S.name || '').trim() || '名称未設定のブレンド';
+  var ex = !asNew && S.editId ? store.recipes.filter(function (r) { return r.id === S.editId; })[0] : null;
+  if (ex) {
+    ex.name = name; ex.items = items; ex.pred = rnd(p.final); ex.base = rnd(p.base); ex.ver = MODEL.version; ex.updatedAt = now;
+  } else {
+    var rec = { id: 'r' + now.toString(36) + Math.floor(Math.random() * 1296).toString(36), name: name, items: items, pred: rnd(p.final), base: rnd(p.base), ver: MODEL.version, createdAt: now, updatedAt: now, tastings: [] };
+    store.recipes.unshift(rec); S.editId = rec.id;
+  }
+  persist(); saveDraft(); toast('保存しました');
+  renderBar();
+}
+function editRecipe(id) {
+  var r = store.recipes.filter(function (x) { return x.id === id; })[0]; if (!r) { return; }
+  var m = beanMap(), miss = [];
+  S.sel = []; S.pct = {};
+  r.items.forEach(function (it) { if (m[it.id]) { S.sel.push(it.id); S.pct[it.id] = it.pct; } else { miss.push(it.name); } });
+  S.name = r.name; S.editId = r.id;
+  if (miss.length) { toast(miss.join('、') + 'は削除されているため外しました'); normalize(); }
+  saveDraft(); go('mix');
+}
+function exportJSON() {
+  return JSON.stringify({ app: 'BLEND LAB', model: MODEL.version, exportedAt: new Date().toISOString(),
+    recipes: store.recipes.map(function (r) { return { name: r.name, items: r.items, predicted: r.pred, tastings: (r.tastings || []).map(function (t) { return { at: new Date(t.at).toISOString(), actual: t.vals, memo: t.memo || '' }; }) }; }) }, null, 2);
+}
+
+document.addEventListener('click', function (e) {
+  if (e.target === modal) { closeModal(); return; }
+  var t = e.target.closest('[data-act]'); if (!t) { return; }
+  if (t.disabled) { return; }
+  var a = t.getAttribute('data-act'), id = t.getAttribute('data-id');
+  switch (a) {
+    case 'home': go('home'); break;
+    case 'new': startNew(); go('select'); break;
+    case 'resume': go(S.sel.length >= 3 ? 'mix' : 'select'); break;
+    case 'sample': startNew(SAMPLE.map(function (s) { return s.id; })); SAMPLE.forEach(function (s) { S.pct[s.id] = s.pct; }); saveDraft(); go('mix'); break;
+    case 'goSaved': go('saved'); break;
+    case 'step': go(t.getAttribute('data-s')); break;
+    case 'toggle':
+      if (t.getAttribute('aria-disabled') === 'true') { toast('選べる豆は5種類までです。ほかの豆を外すと追加できます'); break; }
+      toggleBean(id); break;
+    case 'detail': S.modal = { t: 'detail', id: id }; showModal(detailHTML(beanMap()[id])); break;
+    case 'addBean': S.modal = { t: 'edit', id: null }; showModal(editHTML(null)); break;
+    case 'toMix': if (S.sel.length >= 3) { go('mix'); } break;
+    case 'toSelect': go('select'); break;
+    case 'toResult': if (mixValid()) { S.name = S.name; go('result'); } break;
+    case 'equal': equalSplit(); saveDraft(); syncMix(); break;
+    case 'norm': normalize(); saveDraft(); syncMix(); break;
+    case 'drop':
+      var wasPct = S.pct[id] || 0, rest = S.sel.filter(function (x) { return x !== id; });
+      S.sel = rest; delete S.pct[id]; S.name = '';
+      if (rest.length) { if (S.auto) { normalize(); } }
+      saveDraft(); render(true);
+      if (rest.length < 3) { toast('3種類以上の豆が必要です。「豆を追加・入れ替える」から追加してください'); }
+      break;
+    case 'saveNew': saveRecipe(true); break;
+    case 'saveOver': saveRecipe(false); break;
+    case 'edit': editRecipe(id); break;
+    case 'del': S.confirmDel = id; render(true); break;
+    case 'delNo': S.confirmDel = null; render(true); break;
+    case 'delGo':
+      store.recipes = store.recipes.filter(function (r) { return r.id !== id; });
+      S.cmp = S.cmp.filter(function (x) { return x !== id; });
+      if (S.editId === id) { S.editId = null; saveDraft(); }
+      S.confirmDel = null; persist(); render(true); toast('削除しました'); break;
+    case 'tast': S.tasting = S.tasting === id ? null : id; render(true); break;
+    case 'tastClose': S.tasting = null; render(true); break;
+    case 'tastSave':
+      var rec = store.recipes.filter(function (r) { return r.id === id; })[0]; if (!rec) { break; }
+      var vals = {}; AXK.forEach(function (k) { vals[k] = +$('tr-' + k).textContent; });
+      rec.tastings = rec.tastings || []; rec.tastings.push({ at: Date.now(), vals: vals, memo: ($('tmemo').value || '').trim() });
+      S.tasting = null; persist(); render(true); toast('試飲評価を登録しました'); break;
+    case 'export':
+      S.exportText = exportJSON(); render(true);
+      var done = function () { toast('コピーしました'); }, fail = function () { toast('下の欄から手動でコピーしてください'); var x = $('exp'); if (x) { x.focus(); x.select(); } };
+      try { navigator.clipboard.writeText(S.exportText).then(done, fail); } catch (err) { fail(); }
+      break;
+    case 'mclose': closeModal(); break;
+    case 'medit': S.modal = { t: 'edit', id: id }; showModal(editHTML(beanMap()[id])); break;
+    case 'mreset': delete store.ov[id]; persist(); closeModal(); refreshBeans(); toast('初期値に戻しました'); break;
+    case 'mdelete':
+      store.custom = store.custom.filter(function (c) { return c.id !== id; });
+      S.sel = S.sel.filter(function (x) { return x !== id; }); equalSplit(); saveDraft(); persist(); closeModal(); refreshBeans(); toast('削除しました'); break;
+    case 'msave': saveBeanForm(id); break;
+  }
+});
+function refreshBeans() { if (S.screen === 'select') { $('beanlist').innerHTML = beanListHTML(); steps.innerHTML = stepsHTML(); renderBar(); } else { render(true); } }
+function saveBeanForm(id) {
+  var name = $('ed-name').value.trim(), err = $('ed-err');
+  if (!name) { err.textContent = '名称を入力してください。'; err.hidden = false; return; }
+  var f = { name: name, region: $('ed-region').value, kind: $('ed-kind').value, origin: $('ed-origin').value.trim() || '不明', grade: $('ed-grade').value.trim(), roast: $('ed-roast').value.trim(),
+    desc: $('ed-desc').value.trim() || '(説明なし)', basis: $('ed-basis').value.trim() || '自分で入力した推定値です。', taste: {} };
+  AXK.forEach(function (k) { f.taste[k] = clamp(Math.round(+$('ed-' + k).value || 0), 0, 100); });
+  var isBase = BASE_BEANS.some(function (b) { return b.id === id; });
+  if (id && isBase) { store.ov[id] = f; }
+  else if (id) { store.custom = store.custom.map(function (c) { if (c.id === id) { f.id = id; return f; } return c; }); }
+  else { f.id = 'c' + Date.now().toString(36); store.custom.push(f); }
+  persist(); closeModal(); refreshBeans(); toast('保存しました');
+}
+
+document.addEventListener('input', function (e) {
+  var t = e.target, role = t.getAttribute && t.getAttribute('data-role');
+  if (t.id === 'q') { S.q = t.value; $('beanlist').innerHTML = beanListHTML(); return; }
+  if (t.id === 'bname') { S.name = t.value; saveDraft(); return; }
+  if (t.id === 'auto') { return; }
+  if (role === 'rng') { setPct(t.getAttribute('data-id'), t.value); saveDraft(); syncMix(); }
+  else if (role === 'num') { if (t.value === '') { return; } setPct(t.getAttribute('data-id'), t.value); saveDraft(); syncMix(t); }
+  else if (role === 'tr') { $('tr-' + t.getAttribute('data-k')).textContent = t.value; }
+  else if (role === 'edr') { $('edo-' + t.getAttribute('data-k')).textContent = t.value; }
+});
+document.addEventListener('change', function (e) {
+  var t = e.target, role = t.getAttribute && t.getAttribute('data-role');
+  if (t.id === 'auto') { S.auto = t.checked; return; }
+  if (role === 'num' && t.value === '') { syncMix(); }
+  if (role === 'num') { t.value = S.pct[t.getAttribute('data-id')] || 0; }
+  if (role === 'cmp') {
+    var id = t.getAttribute('data-id'), i = S.cmp.indexOf(id);
+    if (t.checked) { if (S.cmp.length >= 4) { t.checked = false; toast('比較できるのは4つまでです'); return; } S.cmp.push(id); }
+    else if (i >= 0) { S.cmp.splice(i, 1); }
+    render(true);
+  }
+});
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) { closeModal(); } });
+
+/* テスト用に計算ロジックを公開(画面には影響しません) */
+window.__blend = { predict: predict, describe: describe, BASE_BEANS: BASE_BEANS, MODEL: MODEL, AXK: AXK };
+
+render(true);
+})();
+</script>
+
+</body></html>
